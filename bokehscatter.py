@@ -11,11 +11,9 @@ Your browser will open up at the appropriate address:
 import pandas as pd
 import numpy as np
 from bokeh.plotting import figure, curdoc
-# from palettable.colorbrewer.qualitative import Accent_8
 from bokeh.models import Select, ColumnDataSource
 from bokeh.layouts import row, widgetbox
 from bokeh.palettes import brewer
-# from bokeh.charts import Scatter
 
 print('loading data...')
 df_samp = pd.read_csv('covtype_preprocess.sampled.csv', index_col=0)
@@ -98,12 +96,8 @@ y2 = Select(title='Y2-Axis', value='Aspect',
             options=quantcols)
 y2.on_change('value', update2)
 
-# controls = widgetbox([y1, y2])
 controls = widgetbox([x, y1, y2], width=300)
-# controls = widgetbox([x, y1], width=300)
 layout = row(controls, create_scatter1(), create_scatter2())
-# layout = gridplot([[controls, create_scatter1(), create_scatter2()]])
-# layout = row(controls, create_scatter1())
 
 curdoc().add_root(layout)
 curdoc().title = "Quantitative Variable Explorer"
