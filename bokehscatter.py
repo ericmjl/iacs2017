@@ -80,7 +80,7 @@ def update2(attr, old, new):
 
 
 x = Select(title='X-Axis', value='Elevation', options=quantcols)
-# x.on_change('value', update)
+x.on_change('value', update)
 
 y1 = Select(title='Y1-Axis', value='Horizontal_Distance_To_Hydrology',
             options=quantcols)
@@ -90,8 +90,8 @@ y2 = Select(title='Y2-Axis', value='Aspect',
             options=quantcols)
 y2.on_change('value', update2)
 
-controls = widgetbox([y1, y2])
-# controls = widgetbox([x, y1, y2], width=300)
+# controls = widgetbox([y1, y2])
+controls = widgetbox([x, y1, y2], width=300)
 # controls = widgetbox([x, y1], width=300)
 layout = row(controls, create_scatter1(), create_scatter2())
 # layout = row(controls, create_scatter1())
