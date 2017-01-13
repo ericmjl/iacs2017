@@ -1,22 +1,33 @@
+"""
+To load this example, in the directory containing this script, run
+
+    bokeh serve --show bokehscatter.py
+
+Your browser will open up at the appropriate address:
+
+    http://localhost:5006/bokehscatter
+"""
+
 import pandas as pd
 import numpy as np
 from bokeh.plotting import figure, curdoc
 # from palettable.colorbrewer.qualitative import Accent_8
 from bokeh.models import Select, ColumnDataSource
 from bokeh.layouts import row, widgetbox
+from bokeh.palettes import brewer
 # from bokeh.charts import Scatter
 
-df = pd.read_csv('covtype_preprocess.csv', index_col=0)
-df.sort_values(by='Cover_Type', ascending=True, inplace=True)
-df = df.rename(columns={'Hillshade_9am': 'Hillshade_9Am',
-                        'Hillshade_3pm': 'Hillshade_3Am'})
-df_samp = df.sample(frac=0.001)
+print('loading data...')
+df_samp = pd.read_csv('covtype_preprocess.sampled.csv', index_col=0)
+df_samp.sort_values(by='Cover_Type', ascending=True, inplace=True)
+df_samp = df_samp.rename(columns={'Hillshade_9am': 'Hillshade_9Am',
+                                  'Hillshade_3pm': 'Hillshade_3Am'})
 
-cover_types = sorted(np.unique(df['Cover_Type'].values))
+
+print('preprocessing data...')
+cover_types = sorted(np.unique(df_samp['Cover_Type'].values))
 n_types = len(cover_types)
-# colors = Accent_8.mpl_colormap
-colors = ['DarkSeaGreen', 'Firebrick', 'Gold', 'Indigo', 'LightCoral',
-          'LimeGreen', 'MistyRose']
+colors = brewer['Accent'][n_types]
 src = ColumnDataSource(df_samp)
 src.data['colors'] = df_samp['Cover_Type'].apply(lambda x: colors[x - 1])
 
@@ -41,9 +52,10 @@ def create_scatter1():
     kw = dict()
     kw['title'] = "{0} vs {1}".format(x_title, y1_title)
 
-    f1 = figure(plot_height=500, plot_width=500, tools=TOOLS)
+    f1 = figure(plot_height=400, plot_width=400, tools=TOOLS, **kw)
     f1.scatter(x=x_title, y=y1_title, color='colors', source=src)
-
+    f1.xaxis.axis_label = x_title
+    f1.yaxis.axis_label = y1_title
     return f1
 
 
@@ -55,18 +67,14 @@ def create_scatter2():
     kw = dict()
     kw['title'] = "{0} vs {1}".format(x_title, y2_title)
 
-    f2 = figure(plot_height=500, plot_width=500, tools=TOOLS)
+    f2 = figure(plot_height=400, plot_width=400, tools=TOOLS, **kw)
     f2.scatter(x=x_title, y=y2_title, color='colors', source=src)
+    f2.xaxis.axis_label = x_title
+    f2.yaxis.axis_label = y2_title
     return f2
 
 
 def update(attr, old, new):
-    # This doesn't work...
-    # layout.children[1] = create_scatter1()
-    # print(layout.children[1])
-    # layout.children[2] = create_scatter2()
-
-    # And this doesn't work either...
     update1(attr, old, new)
     update2(attr, old, new)
 
@@ -94,6 +102,7 @@ y2.on_change('value', update2)
 controls = widgetbox([x, y1, y2], width=300)
 # controls = widgetbox([x, y1], width=300)
 layout = row(controls, create_scatter1(), create_scatter2())
+# layout = gridplot([[controls, create_scatter1(), create_scatter2()]])
 # layout = row(controls, create_scatter1())
 
 curdoc().add_root(layout)
