@@ -1,6 +1,7 @@
 from bokeh.models.widgets import CheckboxGroup, Button
 from bokeh.layouts import row
-from bokeh.plotting import figure, curdoc  # , output_file  #, show,
+from bokeh.plotting import curdoc  # , output_file  #, show,
+from bokeh.charts import Bar
 import pandas as pd
 
 # Load data
@@ -17,9 +18,7 @@ def make_bar():
     all_active.extend(chkbx2.active)
 
     sel_data = df.iloc[all_active]
-    p = figure(plot_width=600, plot_height=400)
-    p.vbar(x=range(len(all_active)), width=0.4,
-           top=sel_data['mutual_information'])
+    p = Bar(sel_data, values='mutual_information', label='features')
     return p
 
 
@@ -30,6 +29,11 @@ def update(attr, old, new):
 def clear():
     chkbx.active = [0]
     chkbx2.active = []
+
+
+def sel_all():
+    chkbx.active = [i for i in range(brk)]
+    chkbx2.active = [i for i in range(len(qual_cols) - brk)]
 
 
 # Make interactive stuff.
@@ -43,11 +47,14 @@ chkbx2.on_change('active', update)
 clr_button = Button(label='Clear Selections', button_type='success')
 clr_button.on_click(clear)
 
+all_button = Button(label='Select All', button_type='success')
+all_button.on_click(sel_all)
+
 # Layout document.
 # controls = widgetbox([chkbx], [chkbx2])
 r1 = row(chkbx, chkbx2, make_bar())
-r2 = row(clr_button)
+r2 = row(clr_button, all_button)
 
 curdoc().add_root(r1)
 curdoc().add_root(r2)
-curdoc().title = "Quantitative Variable Explorer"
+curdoc().title = "Qualitative Variable Explorer"
