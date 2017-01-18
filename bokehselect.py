@@ -15,7 +15,8 @@ qual_cols = list(df['features'].values)
 def make_bar():
     all_active = []
     all_active.extend(chkbx.active)
-    all_active.extend(chkbx2.active)
+    all_active.extend([i + brk for i in chkbx2.active])
+    print(chkbx2.active)
 
     sel_data = df.iloc[all_active]
     p = Bar(sel_data, values='mutual_information', label='features')
