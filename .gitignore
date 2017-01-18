@@ -1,4 +1,4 @@
 .ipynb_checkpoints/*
 __pycache__/*
 covtype_preprocess*.csv
-covetype.data
+covtype.data
