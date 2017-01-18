@@ -2,6 +2,22 @@
 
 My contest entries are present in the `analysis.ipynb` notebook.
 
+## Running the interactive plots
+
+You'll need to clone this repository locally, and have `bokeh`, `pandas` and `numpy` installed. After that, run:
+
+```bash
+$ bokeh serve --show bokehscatter.py --port 5001
+```
+
+or
+
+```bash
+$ bokeh serve --show bokehselect.py --port 5002
+```
+
+
+
 ## Before Running Notebook...
 Prior to running the notebook, the data file (`covtype_preprocess.csv.zip`) has to be unzipped first.
 
